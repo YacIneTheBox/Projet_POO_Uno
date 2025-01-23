@@ -11,7 +11,7 @@ public class Player {
 	List<Card> main = new ArrayList<>(nbrtotal);
 	boolean turn = false;
 	String name;
-	
+	// nahi num
 	public Player(int numero_player ,boolean bot,String name) {
 		this.numero_player = numero_player;
 		this.bot = bot;
@@ -22,7 +22,7 @@ public class Player {
 	
 	public void setTurn() {
 		turn = true;
-	}
+	}												
 	public void endTurn() {
 		turn = false;
 	}
@@ -45,7 +45,7 @@ public class Player {
 	
 	// verifer automatiquement si il peut poser une carte
 	
-	public Boolean verifauto(Card Last_carte) {
+	public Boolean canplay(Card Last_carte) {
 		for (Card carte : main) {
 			if (carte.canPlay(Last_carte) == true ) {
 				return true;
@@ -62,13 +62,28 @@ public class Player {
 			System.out.println(i); // numero de la carte dans la main
 			carte.afficher();
 			i++;
-		}
+		}      
 	}
-	
+
 	// poser une carte
 	public Card poserCarte(int numCarte) {
 		Card carte = main.remove(numCarte-1);
 		return carte;
+	}
+	
+	public boolean isUno() {
+		if (main.size() == 1) {
+			return true;
+		}
+		return false;
+	}
+	
+	public void uno() {
+		System.out.println("The player : "+ this.name + "Is UNO");
+	}
+	
+	public void won() {
+		System.out.println("The player : "+ this.name + "won the game");
 	}
 	
 	// verif si la main est vide (victoire)
