@@ -7,7 +7,7 @@ public class Player {
 	
 	int numero_player;
 	boolean bot;
-	int nbrtotal = 112;
+	int nbrtotal = 108;
 	List<Card> main = new ArrayList<>(nbrtotal);
 	boolean turn = false;
 	String name;
@@ -56,7 +56,7 @@ public class Player {
 	
 	// voir ses cartes 
 	public void VoirCarte() {
-		int i=0;
+		int i=1;
 		System.out.println("you have : ");
 		for (Card carte : main) {
 			System.out.println(i); // numero de la carte dans la main
@@ -67,7 +67,7 @@ public class Player {
 	
 	// poser une carte
 	public Card poserCarte(int numCarte) {
-		Card carte = main.remove(numCarte);
+		Card carte = main.remove(numCarte-1);
 		return carte;
 	}
 	
@@ -77,7 +77,5 @@ public class Player {
 			return true;
 		}
 		return false;
-	}
-	
-	
+	}	
 }
