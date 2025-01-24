@@ -5,16 +5,15 @@ import java.util.List;
 
 public class Deck {
 	List<Card> deckpile = new ArrayList<>();
-	List<Card> lapiochepile = new ArrayList<>();
 	List<Card> gamepile = new Arraylist<>();
 	
+	//cree et maitretre la premiere carte dans la liste de la game
 	public void initgamepile() {
 		Card card = deckpile.remove(0);
 		gamepile.add(card);
 	}
-		
 	
-	
+	//creation du deck et remplissage avec 108 acrte
 	public void initdeckpile() {
 	    deckpile.clear(); // Assurez-vous que le deck est vide avant de commencer
 
@@ -69,51 +68,44 @@ public class Deck {
 	    }
 	}
 
-	
+	//melanger les cartes afin de pouvoire les distribuer
 	public void shuffle() {
 		Collections.shuffle(deckpile);
 	}
-	
-	public void emptydeckpile() {
-		deckpile.clear(); //supression de tout les elements du deck
-	}
-	
-	public void addtolapioche() {
-		// Ajouter toutes les cartes restantes du deckpile à lapioche
-	    lapiochepile.addAll(deckpile);
 
-	    // Vider deckpile, car toutes ses cartes sont maintenant dans lapioche
-	    deckpile.clear();
-	}
-	
-	public void addtodeckpile(Card nvCard) {
-		deckpile.add(nvCard);
-	}
-
-	//la methode distribuer qui prend en parametre le nombre de joueur dans la partie;
-	public void destribuer(int nbplayer, List<Player> p1) {
-		 // Vérification : il doit y avoir suffisamment de joueurs et de cartes
-	    if (p1.size() != nbplayer) {
-	        throw new IllegalArgumentException("Le nombre de joueurs ne correspond pas à la liste fournie.");
-	    }
-	    if (deckpile.size() < nbplayer * 7) {
-	        throw new IllegalStateException("Pas assez de cartes dans le deck pour distribuer.");
-	    }
-
-	    // Distribution des 
-
-	    for (int i = 0; i < 7; i++) { // Chaque joueur reçoit 7 cartes
-	        for (Player player : p1) {
+	//la methode distribuer qui retourne une cartes du deck pour la distribuer sur un joueure dans la classe game
+	public Card Drawcard() {
 	            Card card = deckpile.remove(0); // Prendre la première carte du deck
-	            player.receivcard(card); // Ajouter la carte au joueur
-	        }
-	    }
+	            return card;
 	}
 
-	public void removefromlapioche() {
-		//enlever le premier element de la pile lapioche
-		lapiochepile.remove(0);}
-
-	public boolean lapiocheisempty() {
-		return lapioche.isEmpty();
+	//la methode deck is empty pour verifier si on le joueure peut piocher si il n'est pas vide le joueure peut pioche sinon on vas reconstuire le deck a partire de gamepile
+	public boolean deckisempty() {
+		return deckpile.isEmpty();
 	}
+
+    //on utilise cette methode pour avoire la derniere carte ajouter la liste game pour savoire si la prochaine carte que le joueure vas poser est jouable ou non
+	public Card getfirstcard() {
+		Card card = gamepile.get(gamepile.size() -1);
+		return card;
+		}
+	
+	
+	//la methode add to game pile pour qu'on puisse ajouter des carte a la pile du jeux en cours du jeux
+	public void addtogamepile(Card card) {
+		gamepile.add(card);
+	}
+	
+	//la methode reset deck pour reconstruire le deck a partire de la gamepile vue qu'elle contiendra presque toute les carte, en cas ou il est devenu vide et la game ne s'est pas finit
+	public void resetdeck() {
+		Card card = gamepile.remove(0);
+		deckpile.addAll(gamepile);
+		gamepile.add(card);
+	}
+
+
+
+
+
+
+}
