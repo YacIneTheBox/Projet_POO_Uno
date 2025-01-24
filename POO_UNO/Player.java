@@ -7,34 +7,13 @@ import java.util.List;
 public class Player {
 	Scanner scanner = new Scanner(System.in);
 	
-	int numero_player;
-	boolean bot;
 	int nbrtotal = 108;
 	List<Card> main = new ArrayList<>(nbrtotal);
-	boolean turn = false;
+
 	String name;
 	// nahi num
-	public Player(int numero_player,String name) {
-		this.numero_player = numero_player;
+	public Player(String name) {
 		this.name = name;
-	}
-	
-	// fonction pour definir si c le tour du jouer ou pas
-	
-	public void setTurn() {
-		turn = true;
-	}												
-	public void endTurn() {
-		turn = false;
-	}
-	
-	// varif si c un bot
-	
-	public boolean IsBot() {
-		if (this.bot = true) {
-			return true;
-		}
-		return false;
 	}
 	
 	// ajoute une carte a la main
@@ -53,6 +32,10 @@ public class Player {
 			}
 		}
 		return false;
+	}
+	
+	public Card getCardNum(int numCard) {
+		return main.get(numCard);
 	}
 	
 	// voir ses cartes 
@@ -102,12 +85,5 @@ public class Player {
 	public void won() {
 		System.out.println("The player : "+ this.name + "won the game");
 	}
-	
-	// verif si la main est vide (victoire)
-	public boolean IsEmpty() {
-		if (main.size()==0) {
-			return true;
-		}
-		return false;
-	}	
+		
 }
