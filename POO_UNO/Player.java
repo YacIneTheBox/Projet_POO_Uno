@@ -1,9 +1,11 @@
 package POO_UNO;
 
 import java.util.ArrayList;
+import java.util.Scanner;
 import java.util.List;
 
 public class Player {
+	Scanner scanner = new Scanner(System.in);
 	
 	int numero_player;
 	boolean bot;
@@ -12,9 +14,8 @@ public class Player {
 	boolean turn = false;
 	String name;
 	// nahi num
-	public Player(int numero_player ,boolean bot,String name) {
+	public Player(int numero_player,String name) {
 		this.numero_player = numero_player;
-		this.bot = bot;
 		this.name = name;
 	}
 	
@@ -62,12 +63,28 @@ public class Player {
 			System.out.println(i); // numero de la carte dans la main
 			carte.afficher();
 			i++;
-		}      
+		}
+	}
+	
+	// nombre de carte restant
+	public int nbrCarteRestante() {
+		return main.size();
 	}
 
-	// poser une carte
+	// choix d'une carte
+	public int chooseCard(Card Last_carte) { // return index de la carte qu'on veut jouer
+		int nbrcarte = main.size();
+		int numCarte = -1;
+		do {
+			System.out.println("Enter a Card : ");
+			numCarte = scanner.nextInt();}
+		while (numCarte < 0 && numCarte > nbrcarte);
+		
+		return numCarte;
+	}
+	
 	public Card poserCarte(int numCarte) {
-		Card carte = main.remove(numCarte-1);
+		Card carte = main.remove(numCarte);
 		return carte;
 	}
 	
