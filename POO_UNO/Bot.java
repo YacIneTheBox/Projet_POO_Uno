@@ -4,8 +4,8 @@ public class Bot extends Player {
 	
 	// constructeur du bot
 	
-	public Bot(int numero_jouer,String name) {
-		super(numero_jouer,name);
+	public Bot(String name) {
+		super(name);
 	}
 	
 	// algo de choix de la carte a poser 
