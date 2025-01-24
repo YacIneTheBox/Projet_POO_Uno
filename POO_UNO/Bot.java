@@ -5,17 +5,18 @@ public class Bot extends Player {
 	// constructeur du bot
 	
 	public Bot(int numero_jouer,String name) {
-		super(numero_jouer,true,name);
+		super(numero_jouer,name);
 	}
 	
 	// algo de choix de la carte a poser 
 	
 
-	public Card PlayBot(Card Last_carte) {
+	public int chooseCard(Card Last_carte) { // return the num of the played card
+		int i=1;
 		for (Card carte : main) {
 			// le cas ou une carte a la meme couleur
 			if (carte.getColor() == Last_carte.getColor()) {
-				return carte;
+				return i;
 			}
 			// le cas ou meme chiffre
 			if (carte instanceof RegularCard && Last_carte instanceof RegularCard ) {
@@ -23,14 +24,16 @@ public class Bot extends Player {
 				RegularCard Last_card = (RegularCard) Last_carte;
 				
 				if (Card.getNumber() == Last_card.getNumber()) {
-					return Card;
+					return i;
 				}
 			}
 			// le cas ou on tombe sur une carte joker
 			if (carte instanceof Plus4Card || carte instanceof WildCard) {
-					return carte;
+					return i;
 			}
+			i++;
 		}
-		return null;
+		System.out.println("No card playable");
+		return -1;
 	}
 }
