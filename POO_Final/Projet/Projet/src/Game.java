@@ -84,7 +84,8 @@ public class Game {
             if (currentPlayer.canplay(currentCard)) {
                 currentPlayer.VoirCarte();
                 if (currentPlayer.isUno()) {
-                     currentPlayer.won();;
+                    currentPlayer.uno();
+                     currentPlayer.won();
                     gameOver = true;
                     break;
                 }
