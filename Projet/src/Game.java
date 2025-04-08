@@ -124,30 +124,23 @@ public class Game {
 
     // Handle special card effects
     private void handleSpecialCard(Card card) {
-        switch (card.getEffect()) {
-            case "skip":
-                System.out.println("Skipping next player!");
-                currentPlayer = nextturn(); // Passe au joueur suivant et le saute
-                break;
-            case "reverse":
+        if (card instanceof SkipCard) {
+            System.out.println("Skipping next player!");
+            currentPlayer = nextturn(); // Passe au joueur suivant et le saute
+        }else if (card instanceof ReversCard) {
                 System.out.println("Reversing turn order!");
                 isReversed = !isReversed;
-                break;
-            case "plus2":
-                System.out.println("Next player draws 2 cards!");
-                drawCards(2); // Fait piocher 2 cartes au joueur suivant
-                break;
-            case "4color":
-            	currentPlayer.chooseColor(card); // Le joueur choisit une couleur
-            	break ;
-            case "plus4":
-            	currentPlayer.chooseColor(card); // Le joueur choisit une couleur
-                    System.out.println("Next player draws 4 cards!");
-                    drawCards(4); // Fait piocher 4 cartes au joueur suivant
-                break;
-            default:
-                break;
+        }else if (card instanceof Plus2Card) {
+            System.out.println("Next player draws 2 cards!");
+            drawCards(2); // Fait piocher 2 cartes au joueur suivant
+        }else if (card instanceof FourColorCard) {
+            currentPlayer.chooseColor(card); // Le joueur choisit une couleur
+        }else if (card instanceof Plus4Card) {
+            currentPlayer.chooseColor(card); // Le joueur choisit une couleur
+            System.out.println("Next player draws 4 cards!");
+            drawCards(4); // Fait piocher 4 cartes au joueur suivant
         }
+
     }
     // Draw a specified number of cards for the next player
     private void drawCards(int count) {
