@@ -8,7 +8,7 @@ import java.awt.event.MouseListener;
 public class Ybutton extends JButton {
 
 
-    public Ybutton(String texte, Color c2,Color c1) {
+    public Ybutton(String texte, Color c2,Color c1,int x,int y,int w,int h) {
         super(texte);
         setContentAreaFilled(false); // Empêche le remplissage par défaut
         setFocusPainted(false);     // Enlève le focus bleu
@@ -16,6 +16,7 @@ public class Ybutton extends JButton {
         setForeground(c1); // Texte en blanc
         setFont(new Font("Montserrat", Font.BOLD, 14));
         setBackground(Color.RED);
+        setBounds(x,y,w,h);
 
     }
 
