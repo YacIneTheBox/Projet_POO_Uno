@@ -274,7 +274,7 @@ public class UNOMain {
     /* ========== UNO MECHANICS ========== */
     private void handleUnoCall() {
         Player currentPlayer = getCurrentPlayer();
-        
+        if(!isCurrentPlayerHuman()) return ;
         if (currentPlayer.nbrCarteRestante() == 2) {
             unoCalledMap.put(currentPlayer, true);
             showGameMessage(currentPlayer.getname() + " called UNO!", "UNO Call");
