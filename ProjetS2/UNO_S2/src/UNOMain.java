@@ -582,7 +582,7 @@ public class UNOMain {
     private void updateTurnDisplay() {
         turnLabel.setText(getCurrentPlayer().getname() + "'s turn");
         drawButton.setEnabled(isCurrentPlayerHuman() && !gameOver && !isChoosingColor);
-        
+        unoButton.setEnabled(isCurrentPlayerHuman() && !gameOver && !isChoosingColor);
         for (int i = 0; i < MAX_PLAYERS; i++) {
             playerPanels.get(i).setActive(i == getCurrentPlayerIndex());
         }
