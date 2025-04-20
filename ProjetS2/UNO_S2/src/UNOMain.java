@@ -280,6 +280,8 @@ public class UNOMain {
             showGameMessage(currentPlayer.getname() + " called UNO!", "UNO Call");
         } else {
         	drawPenaltyCards(currentPlayer, 1);
+            updatePlayerHands();
+        	updateGameState(); 
             //checkForUnoPenalties();
         }
     }
