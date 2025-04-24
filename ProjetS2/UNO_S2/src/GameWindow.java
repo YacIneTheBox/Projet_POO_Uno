@@ -1,13 +1,13 @@
-import Z.* ;
-
 import javax.swing.*;
 import java.awt.*;
 
 public class GameWindow {
-    private final ZFrame frame;
+    private final JFrame frame;
 
     public GameWindow(String title) {
-        frame = new ZFrame(title);
+        frame = new JFrame(title);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLayout(new BorderLayout());
     }
 
     // Add this method to fix the repaint issue
@@ -19,10 +19,8 @@ public class GameWindow {
         frame.revalidate();
         frame.repaint();
     }
-    public void close() {
-    	frame.dispose();
-    }
-    public void addPlayerPanel(ZPanel panel, String position) {
+
+    public void addPlayerPanel(JPanel panel, String position) {
         switch(position.toLowerCase()) {
             case "top" -> frame.add(panel, BorderLayout.NORTH);
             case "left" -> frame.add(panel, BorderLayout.WEST);
@@ -31,7 +29,7 @@ public class GameWindow {
         }
     }
 
-    public void setContent(ZPanel panel) {
+    public void setContent(JPanel panel) {
         frame.getContentPane().add(panel, BorderLayout.CENTER);
     }
 

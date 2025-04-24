@@ -30,14 +30,19 @@ public class PlayerHandPanel {
     private void setupMainPanel() {
         mainPanel = new ZPanel(new BorderLayout());
         mainPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        mainPanel.setBackground(new Color(230, 230, 230));
     }
     
     private void setupCardsPanel() {
         cardsPanel = new ZPanel();
         cardsPanel.setLayout(new FlowLayout(FlowLayout.LEFT, CARD_SPACING, CARD_SPACING));
+        cardsPanel.setBackground(mainPanel.getBackground());
         
-        ZScrollPane scrollPane = new ZScrollPane(cardsPanel);
-
+        JScrollPane scrollPane = new JScrollPane(cardsPanel);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setBorder(null);
+        scrollPane.setPreferredSize(new Dimension(600, 150));
         
         mainPanel.add(scrollPane);
     }
@@ -113,7 +118,7 @@ public class PlayerHandPanel {
         this.cardClickHandler = handler;
     }
     
-    public ZPanel getPanel() {
+    public JPanel getPanel() {
         return mainPanel;
     }
     

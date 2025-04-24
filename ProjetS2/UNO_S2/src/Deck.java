@@ -122,7 +122,7 @@ public class Deck {
 
 	    // Shuffle the deckpile to ensure randomness
 	    shuffle();
-	    System.out.println("it worked///////////////////////////////////////");
+	    
 	}
 
 

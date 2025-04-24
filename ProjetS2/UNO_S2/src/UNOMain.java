@@ -22,8 +22,8 @@ public class UNOMain {
     private static List<PlayerHandPanel> playerPanels = new ArrayList<>();
     private static PilePanel piles;
     private static ZLabel turnLabel;
-    private static ZButton drawButton;
-    private static ZButton unoButton;
+    private static JButton drawButton;
+    private static JButton unoButton;
     private static Timer gameTimer;
     
     private static boolean isChoosingColor = false;
@@ -57,9 +57,6 @@ public class UNOMain {
             Player player = new Player(name);
             for (int j = 0; j < 7; j++) {
                 Card card = deck.Drawcard();
-                if(deck.deckisempty()){
-                	deck.resetdeck();
-                	}
                 player.receiveCard(card);
             }
             players.add(player);
@@ -70,9 +67,6 @@ public class UNOMain {
             Bot bot = new Bot("Bot" + i);            
             for (int j = 0; j < 7; j++) {
                 Card card = deck.Drawcard();
-                if(deck.deckisempty()){
-                	deck.resetdeck();
-                	}
                 bot.receiveCard(card);
             }
             players.add(bot);
@@ -167,10 +161,10 @@ public class UNOMain {
     private ZPanel createButtonPanel() {
         ZPanel buttonPanel = new ZPanel(new FlowLayout());
         
-        drawButton = new ZButton("Draw Card");
+        drawButton = new JButton("Draw Card");
         drawButton.addActionListener(e -> handleDrawCard());
         
-        unoButton = new ZButton("UNO!");
+        unoButton = new JButton("UNO!");
         unoButton.addActionListener(e -> handleUnoCall());
         
         buttonPanel.add(drawButton);
@@ -197,6 +191,7 @@ public class UNOMain {
     private void handleHumanPlay(GameCard card) {
         Player currentPlayer = getCurrentPlayer();
         System.out.println("Attempting to play: " + card.getOriginalCard() + " on " + currentCard);
+        
         if (card.getOriginalCard().canPlay(currentCard)) {
             int cardIndex = findCardIndex(currentPlayer, card.getOriginalCard());
             if (cardIndex != -1) {
@@ -204,10 +199,7 @@ public class UNOMain {
                 Card playedCard = currentPlayer.getCardNum(cardIndex);
                 currentCard = currentPlayer.poserCarte(cardIndex);
                 deck.addtogamepile(currentCard);
-                if (currentPlayer.nbrCarteRestante() == 1 && !unoCalledMap.get(currentPlayer)) {
-                    drawPenaltyCards(currentPlayer, 2);
-                    showGameMessage("You didn't call UNO! +2 cards", "PENALTY");
-                }
+                
                 updateDiscardPile();
                 updatePlayerHands();
                 handleSpecialCard(playedCard);
@@ -229,9 +221,6 @@ public class UNOMain {
         
         Player currentPlayer = getCurrentPlayer();
         Card drawnCard = deck.Drawcard();
-        if(deck.deckisempty()){
-        	deck.resetdeck();
-        	}
 
         if (drawnCard != null) {
             currentPlayer.receiveCard(drawnCard);
@@ -274,15 +263,12 @@ public class UNOMain {
     /* ========== UNO MECHANICS ========== */
     private void handleUnoCall() {
         Player currentPlayer = getCurrentPlayer();
-        if(!isCurrentPlayerHuman()) return ;
-        if (currentPlayer.nbrCarteRestante() == 2) {
+        
+        if (currentPlayer.nbrCarteRestante() == 1) {
             unoCalledMap.put(currentPlayer, true);
             showGameMessage(currentPlayer.getname() + " called UNO!", "UNO Call");
         } else {
-        	drawPenaltyCards(currentPlayer, 1);
-            updatePlayerHands();
-        	updateGameState(); 
-            //checkForUnoPenalties();
+            checkForUnoPenalties();
         }
     }
 
@@ -290,8 +276,7 @@ public class UNOMain {
         boolean foundPlayer = false;
         for (int i = 0; i < MAX_PLAYERS; i++) {
             Player player = getPlayerAt(i);
-            // Changement ici : vérifier 2 cartes au lieu de 1
-            if (player.nbrCarteRestante() == 2 && !unoCalledMap.get(player)) {
+            if (player.nbrCarteRestante() == 1 && !unoCalledMap.get(player)) {
                 drawPenaltyCards(player, 2);
                 showGameMessage(player.getname() + " caught without calling UNO! +2 cards", "UNO Penalty");
                 foundPlayer = true;
@@ -301,9 +286,10 @@ public class UNOMain {
         
         if (!foundPlayer) {
             drawPenaltyCards(getCurrentPlayer(), 1);
-        }
+            }
         updatePlayerHands();
     }
+
     /* ========== AI TURN HANDLING ========== */
     private void scheduleAITurn(int delay) {
         if (gameTimer != null) gameTimer.stop();
@@ -320,10 +306,8 @@ public class UNOMain {
     private void aiPlay() {
         Bot currentBot = (Bot) getCurrentPlayer();
 
-        // Check 
-        if (currentBot.nbrCarteRestante() == 2 && currentBot.canplay(currentCard)) {
+        if (currentBot.nbrCarteRestante() == 2) {
             unoCalledMap.put(currentBot, true);
-            showGameMessage(currentBot.getname() + " calls UNO!", "UNO Call");
         }
 
         int cardIndex = currentBot.chooseCard(currentCard);
@@ -332,15 +316,14 @@ public class UNOMain {
             currentCard = currentBot.poserCarte(cardIndex);
             deck.addtogamepile(currentCard);
 
-            // no need to ckeck since its a bot 
-            /*if (currentBot.nbrCarteRestante() == 1 && !unoCalledMap.get(currentBot)) {
-                drawPenaltyCards(currentBot, 2);
-                showGameMessage(currentBot.getname() + " didn't call UNO! +2 cards", "PENALTY");
-            }*/
-
             showGameMessage(currentBot.getname() + " plays " + playedCard, "AI Turn");
             updateDiscardPile();
             updatePlayerHands();
+
+            if (currentBot.nbrCarteRestante() == 1 && unoCalledMap.get(currentBot)) {
+                showGameMessage(currentBot.getname() + " calls UNO!", "UNO Call");
+            }
+
             handleSpecialCard(playedCard);
         } else {
             handleAIDraw();
@@ -354,9 +337,7 @@ public class UNOMain {
     private void handleAIDraw() {
         Bot bot = (Bot) getCurrentPlayer();
         Card drawnCard = deck.Drawcard();
-        if(deck.deckisempty()){
-        	deck.resetdeck();
-        	}
+        
         if (drawnCard != null) {
             bot.receiveCard(drawnCard);
             showGameMessage(bot.getname() + " draws a card", "AI Turn");
@@ -462,36 +443,19 @@ public class UNOMain {
                 
             if (restart == ZOptionPane.YES_OPTION) {
                 restartGame();
-            }else {
-            	window.close();
             }
-            
-            
             return true;
         }
         return false;
     }
 
     private void restartGame() {
-        if (gameTimer != null) {
-            gameTimer.stop();
-        }
-
-        // Clear static fields
-        playerPanels.clear();
-        window.close();  // already done
-        window = null;
-        piles = null;
-        turnLabel = null;
-        drawButton = null;
-        unoButton = null;
-
-        SwingUtilities.invokeLater(() -> {
-            UNOMain newGame = new UNOMain();
-            newGame.initializeGame();
-        });
+        gameOver = false;
+        isChoosingColor = false;
+        if (gameTimer != null) gameTimer.stop();
+        UNOMain newGame = new UNOMain();
+        newGame.initializeGame();
     }
-
 
     /* ========== UTILITY METHODS ========== */
     private int findCardIndex(Player player, Card targetCard) {
@@ -506,9 +470,6 @@ public class UNOMain {
     private void drawPenaltyCards(Player player, int count) {
         for (int i = 0; i < count; i++) {
             Card drawn = deck.Drawcard();
-            if(deck.deckisempty()){
-            	deck.resetdeck();
-            	}
             if (drawn != null) player.receiveCard(drawn);
         }
         updatePlayerHands();
@@ -582,7 +543,7 @@ public class UNOMain {
     private void updateTurnDisplay() {
         turnLabel.setText(getCurrentPlayer().getname() + "'s turn");
         drawButton.setEnabled(isCurrentPlayerHuman() && !gameOver && !isChoosingColor);
-        unoButton.setEnabled(isCurrentPlayerHuman() && !gameOver && !isChoosingColor);
+        
         for (int i = 0; i < MAX_PLAYERS; i++) {
             playerPanels.get(i).setActive(i == getCurrentPlayerIndex());
         }
