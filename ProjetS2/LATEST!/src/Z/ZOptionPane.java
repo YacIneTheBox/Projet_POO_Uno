@@ -23,7 +23,7 @@ public class ZOptionPane extends JOptionPane {
 
     // Méthode pour personnaliser l'apparence
     private void customizeLookAndFeel() {
-        // Exemple : Définir une couleur de fond personnalisée
+
     }
 
 }

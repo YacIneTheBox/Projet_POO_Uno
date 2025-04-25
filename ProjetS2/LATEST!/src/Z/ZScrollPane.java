@@ -3,14 +3,7 @@ package Z;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
-import javax.swing.*;
-import java.awt.*;
-import java.awt.image.BufferedImage;
+
 public class ZScrollPane extends JScrollPane {
 public ZScrollPane(ZPanel panel) {
 	super(panel) ;

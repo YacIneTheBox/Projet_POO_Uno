@@ -1,5 +1,6 @@
 package Z;
 import javax.swing.*;
+import java.awt.*;
 
 public class ZLabel extends JLabel {
     public ZLabel(String s, int center) {
@@ -15,4 +16,9 @@ public class ZLabel extends JLabel {
         super();
     }
 
+
+    public void personalizeLabel(Color foregroundColor, Font font) {
+        setForeground(foregroundColor);
+        setFont(font);
+    }
 }
