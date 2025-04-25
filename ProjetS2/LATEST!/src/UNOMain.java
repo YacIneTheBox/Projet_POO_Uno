@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Scanner;
 
 public class UNOMain {
     // Game state variables
@@ -40,8 +39,7 @@ public class UNOMain {
     public UNOMain() {
         numHumanPlayers = getNumberOfHumanPlayers();
         int numBots = MAX_PLAYERS - numHumanPlayers;
-        
-        Scanner scanner = new Scanner(System.in);
+
         deck = new Deck();
         players = new CircularDoublyLinkedList();
         deck.initdeckpile();
@@ -114,13 +112,7 @@ public class UNOMain {
             return players.getPreviousPlayer(currentPlayer);
         }
     }
-    private Player nextturn() {
-        if (!isReversed) {
-            return players.next();
-        } else {
-            return players.prev();
-        }
-    }
+
     private void initializeGame() {
         window = new GameWindow("UNO Game");
         piles = new PilePanel();
@@ -149,10 +141,12 @@ public class UNOMain {
     }
 
     private void setupCenterPanel() {
-        ZPanel center = new ZPanel(new BorderLayout());
+        ZPanel center = new ZPanel(new BorderLayout()); // affichage de Player
+        center.personalizePanel(new Color(103, 174, 110),2,Color.BLACK);
 
         turnLabel = new ZLabel("", SwingConstants.CENTER);
-        turnLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        turnLabel.personalizeLabel(new Color(68, 54, 39),new Font("Times New Roman", Font.ITALIC, 24));
+
 
         // Ensure the label itself is centered
         turnLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -167,7 +161,7 @@ public class UNOMain {
 
     private ZPanel createButtonPanel() {
         ZPanel buttonPanel = new ZPanel(new FlowLayout());
-        
+        buttonPanel.personalizePanel(new Color(103, 174, 110),1,Color.BLACK);
         drawButton = new ZButton("Draw Card");
         drawButton.addActionListener(e -> handleDrawCard());
         

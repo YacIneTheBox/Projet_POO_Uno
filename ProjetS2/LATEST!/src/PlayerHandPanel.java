@@ -31,13 +31,13 @@ public class PlayerHandPanel {
     
     private void setupMainPanel() {
         mainPanel = new ZPanel(new BorderLayout());
-        mainPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        mainPanel.personalizePanel(new Color(50, 142, 110),0,Color.black);
     }
     
     private void setupCardsPanel() {
         cardsPanel = new ZPanel();
         cardsPanel.setLayout(new FlowLayout(FlowLayout.LEFT, CARD_SPACING, CARD_SPACING));
-        
+        cardsPanel.personalizePanel(new Color(50, 142, 110),1,Color.black);
         ZScrollPane scrollPane = new ZScrollPane(cardsPanel);
         mainPanel.add(scrollPane);
     }

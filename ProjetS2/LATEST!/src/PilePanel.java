@@ -10,11 +10,10 @@ public class PilePanel {
 
     public PilePanel() {
         panel = new ZPanel(new GridLayout(1, 2, 20, 0));
-        panel.setBackground(new Color(200, 200, 200));
-        
+        panel.personalizePanel(new Color(192, 200, 153),0,Color.black);
         // Deck pile (left)
         ZPanel deckPanel = new ZPanel(new BorderLayout());
-        deckPanel.setBackground(new Color(200, 200, 200));
+        deckPanel.personalizePanel(new Color(192, 200, 153),0,Color.black);
         
         // Create card back image - FIXED PATH
         ImageIcon cardBackIcon = null;
@@ -31,15 +30,17 @@ public class PilePanel {
         }
 
         ZLabel deckImageLabel = new ZLabel(cardBackIcon);
+        deckImageLabel.personalizeLabel(new Color(68, 54, 39),new Font("Times New Roman", Font.ITALIC, 24));
         deckImageLabel.setHorizontalAlignment(SwingConstants.CENTER);
         deckPanel.add(deckImageLabel, BorderLayout.CENTER);
         
         
         // Discard pile (right)
         ZPanel discardPanel = new ZPanel(new BorderLayout());
-        discardPanel.setBackground(new Color(200, 200, 200));
+        discardPanel.personalizePanel(new Color(192, 200, 153),0,Color.black);
         
         topCardLabel = new ZLabel();
+        topCardLabel.personalizeLabel(new Color(68, 54, 39),new Font("Times New Roman", Font.ITALIC, 24));
         topCardLabel.setHorizontalAlignment(SwingConstants.CENTER);
         discardPanel.add(topCardLabel, BorderLayout.CENTER);
         
