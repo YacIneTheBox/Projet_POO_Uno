@@ -94,6 +94,11 @@ public class UNOMain {
 
     private int getNumberOfHumanPlayers() {
         Integer[] options = {1, 2, 3, 4};
+
+        ZOptionPane.setCustomColors(new Color(50, 142, 110),
+                new Color(50, 142, 110), Color.WHITE,
+                new Color(100, 170, 140), Color.WHITE, Color.DARK_GRAY);
+
         Integer selection = (Integer) ZOptionPane.showInputDialog(
                 null,
                 "How many human players?",
