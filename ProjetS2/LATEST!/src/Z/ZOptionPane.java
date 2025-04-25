@@ -21,9 +21,21 @@ public class ZOptionPane extends JOptionPane {
         customizeLookAndFeel();
     }
 
+
     // Méthode pour personnaliser l'apparence
     private void customizeLookAndFeel() {
+        // Appliquer des couleurs personnalisées
 
+    }
+
+    // Méthode statique pour personnaliser les couleurs avant d'afficher une boîte de dialogue
+    public static void setCustomColors(Color dialogBackground, Color panelBackground, Color messageForeground, Color buttonBackground, Color buttonForeground, Color border) {
+        UIManager.put("OptionPane.background", dialogBackground);
+        UIManager.put("Panel.background", panelBackground);
+        UIManager.put("OptionPane.messageForeground", messageForeground);
+        UIManager.put("OptionPane.buttonBackground", buttonBackground);
+        UIManager.put("OptionPane.buttonForeground", buttonForeground);
+        UIManager.put("OptionPane.border", BorderFactory.createLineBorder(border, 0));
     }
 
 }
