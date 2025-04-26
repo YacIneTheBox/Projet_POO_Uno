@@ -22,11 +22,12 @@ public class PilePanel {
 
     public PilePanel() {
         panel = new ZPanel(new GridLayout(1, 2, 20, 0));
-        panel.setBackground(new Color(200, 200, 200));
-        
+        panel.setBackground(new Color(92, 89, 89));
+
+
         // Deck pile (left)
         ZPanel deckPanel = new ZPanel(new BorderLayout());
-        deckPanel.setBackground(new Color(200, 200, 200));
+        deckPanel.setBackground(new Color(92, 89, 89));
         
         // Create card back image - FIXED PATH
         ImageIcon cardBackIcon = null;
@@ -49,7 +50,7 @@ public class PilePanel {
         
         // Discard pile (right)
         ZPanel discardPanel = new ZPanel(new BorderLayout());
-        discardPanel.setBackground(new Color(200, 200, 200));
+        discardPanel.setBackground(new Color(92, 89, 89));
         
         topCardLabel = new ZLabel();
         topCardLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -69,7 +70,7 @@ public class PilePanel {
         g2d.fillRect(0, 0, 100, 150);
         
         // Draw border
-        g2d.setColor(Color.BLACK);
+        g2d.setColor(Color.darkGray);
         g2d.drawRect(0, 0, 99, 149);
         
         // Draw UNO text

@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
+import static java.awt.Color.*;
+
 public class UNOMain {
     // Game state variables
     private Deck deck;
@@ -16,20 +18,20 @@ public class UNOMain {
     private boolean isReversed;
     private boolean gameOver;
     private int numHumanPlayers;
-    
+
     // GUI components
     private static GameWindow window;
     private static List<PlayerHandPanel> playerPanels = new ArrayList<>();
     private static PilePanel piles;
     private static ZLabel turnLabel;
-    private static JButton drawButton;
-    private static JButton unoButton;
+    private static ZButton drawButton;
+    private static ZButton unoButton;
     private static Timer gameTimer;
-    
+
     private static boolean isChoosingColor = false;
     private static Map<Player, Boolean> unoCalledMap = new HashMap<>();
     private static final int MAX_PLAYERS = 4;
-    
+
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             UNOMain unoGame = new UNOMain();
@@ -40,7 +42,7 @@ public class UNOMain {
     public UNOMain() {
         numHumanPlayers = getNumberOfHumanPlayers();
         int numBots = MAX_PLAYERS - numHumanPlayers;
-        
+
         Scanner scanner = new Scanner(System.in);
         deck = new Deck();
         players = new CircularDoublyLinkedList();
@@ -49,7 +51,7 @@ public class UNOMain {
         deck.shuffle();
 
         // Add real players
-        for (int i = 1; i <= numHumanPlayers; i++) {            
+        for (int i = 1; i <= numHumanPlayers; i++) {
             String name = ZOptionPane.showInputDialog("Enter player " + i + " name:");
             if (name == null || name.trim().isEmpty()) {
                 name = "Player " + i;
@@ -64,7 +66,7 @@ public class UNOMain {
 
         // Add bots
         for (int i = 1; i <= numBots; i++) {
-            Bot bot = new Bot("Bot" + i);            
+            Bot bot = new Bot("Bot" + i);
             for (int j = 0; j < 7; j++) {
                 Card card = deck.Drawcard();
                 bot.receiveCard(card);
@@ -76,9 +78,9 @@ public class UNOMain {
         currentCard = deck.getfirstcard();
         isReversed = false;
         gameOver = false;
-        players.setCurrentPlayer(players.getFirstPlayer()); 
+        players.setCurrentPlayer(players.getFirstPlayer());
         currentPlayer = players.getFirstPlayer();
-        
+
         // Initialize UNO status
         unoCalledMap.clear();
         Player current = players.getFirstPlayer();
@@ -123,10 +125,10 @@ public class UNOMain {
         window.setSize(1000, 700);
         window.setVisible(true);
         updateGameState();
-        
+
         // Add this line to set up click handlers
         setupCardClickHandlers();
-        
+
         if (!isCurrentPlayerHuman()) {
             scheduleAITurn(1000);
         }
@@ -146,30 +148,34 @@ public class UNOMain {
 
         turnLabel = new ZLabel("", SwingConstants.CENTER);
         turnLabel.setFont(new Font("Arial", Font.BOLD, 24));
-
+        center.setBackground(darkGray);
         // Ensure the label itself is centered
         turnLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
         center.add(turnLabel, BorderLayout.NORTH);
+        turnLabel.setForeground(white);
+        turnLabel.setBackground(darkGray);
 
         center.add(piles.getPanel(), BorderLayout.CENTER);
         center.add(createButtonPanel(), BorderLayout.SOUTH);
 
         window.setContent(center);
+        center.setBorder(null);
     }
 
     private ZPanel createButtonPanel() {
         ZPanel buttonPanel = new ZPanel(new FlowLayout());
-        
-        drawButton = new JButton("Draw Card");
+        Color c1;
+        drawButton = new ZButton("Draw Card",c1 = new Color(220, 20, 60));
         drawButton.addActionListener(e -> handleDrawCard());
-        
-        unoButton = new JButton("UNO!");
+
+        Color c;
+        unoButton = new ZButton("UNO!",c = new Color(220, 20, 60));
         unoButton.addActionListener(e -> handleUnoCall());
-        
+
         buttonPanel.add(drawButton);
         buttonPanel.add(unoButton);
-        
+
         return buttonPanel;
     }
 
@@ -191,7 +197,7 @@ public class UNOMain {
     private void handleHumanPlay(GameCard card) {
         Player currentPlayer = getCurrentPlayer();
         System.out.println("Attempting to play: " + card.getOriginalCard() + " on " + currentCard);
-        
+
         if (card.getOriginalCard().canPlay(currentCard)) {
             int cardIndex = findCardIndex(currentPlayer, card.getOriginalCard());
             if (cardIndex != -1) {
@@ -199,15 +205,16 @@ public class UNOMain {
                 Card playedCard = currentPlayer.getCardNum(cardIndex);
                 currentCard = currentPlayer.poserCarte(cardIndex);
                 deck.addtogamepile(currentCard);
-                
+
                 updateDiscardPile();
                 updatePlayerHands();
                 handleSpecialCard(playedCard);
-                
+
                 if (!checkWinCondition() && !isChoosingColor) {
                     advanceTurn();
                 }
             } else {
+                ZOptionPane z = new ZOptionPane();
                 System.out.println("Card not found in player's hand");
                 showGameMessage("Card not found in your hand!", "Error");
             }
@@ -218,21 +225,21 @@ public class UNOMain {
     }
     private void handleDrawCard() {
         if (gameOver || isChoosingColor || !isCurrentPlayerHuman()) return;
-        
+
         Player currentPlayer = getCurrentPlayer();
         Card drawnCard = deck.Drawcard();
 
         if (drawnCard != null) {
             currentPlayer.receiveCard(drawnCard);
             updatePlayerHands();
-            
+
             if (drawnCard.canPlay(currentCard)) {
                 int choice = ZOptionPane.showConfirmDialog(
                     window.getContentPane(),
                     "Play the drawn card?",
                     "Play Card",
                         ZOptionPane.YES_NO_OPTION);
-                    
+
                 if (choice == ZOptionPane.YES_OPTION) {
                     int cardIndex = findCardIndex(currentPlayer, drawnCard);
                     if (cardIndex != -1) {
@@ -240,10 +247,10 @@ public class UNOMain {
                         deck.addtogamepile(currentCard);
                         updateDiscardPile();
                         handleSpecialCard(drawnCard);
-                        
+
                         // Update the player's hand again after playing the card
                         updatePlayerHands();
-                        
+
                         if (!isChoosingColor) {
                             advanceTurn();
                         }
@@ -251,7 +258,7 @@ public class UNOMain {
                     }
                 }
             }
-            
+
             if (!isChoosingColor) {
                 advanceTurn();
             }
@@ -263,7 +270,7 @@ public class UNOMain {
     /* ========== UNO MECHANICS ========== */
     private void handleUnoCall() {
         Player currentPlayer = getCurrentPlayer();
-        
+
         if (currentPlayer.nbrCarteRestante() == 1) {
             unoCalledMap.put(currentPlayer, true);
             showGameMessage(currentPlayer.getname() + " called UNO!", "UNO Call");
@@ -283,7 +290,7 @@ public class UNOMain {
                 break;
             }
         }
-        
+
         if (!foundPlayer) {
             drawPenaltyCards(getCurrentPlayer(), 1);
             }
@@ -293,7 +300,7 @@ public class UNOMain {
     /* ========== AI TURN HANDLING ========== */
     private void scheduleAITurn(int delay) {
         if (gameTimer != null) gameTimer.stop();
-        
+
         gameTimer = new Timer(delay, e -> {
             if (!gameOver && !isChoosingColor && !isCurrentPlayerHuman()) {
                 aiPlay();
@@ -337,11 +344,11 @@ public class UNOMain {
     private void handleAIDraw() {
         Bot bot = (Bot) getCurrentPlayer();
         Card drawnCard = deck.Drawcard();
-        
+
         if (drawnCard != null) {
             bot.receiveCard(drawnCard);
             showGameMessage(bot.getname() + " draws a card", "AI Turn");
-            
+
             if (drawnCard.canPlay(currentCard) ) {
                 int newCardIndex = findCardIndex(bot, drawnCard);
                 if (newCardIndex != -1) {
@@ -376,17 +383,17 @@ public class UNOMain {
     private void handleSkipEffect() {
         Player playerToSkip = nextplayer();
         showGameMessage(playerToSkip.getname() + "'s turn is skipped!", "Skip Card");
-        
+
         // Move to the player after the skipped one
         if (!isReversed) {
             currentPlayer = players.getNextPlayer(currentPlayer);
         } else {
             currentPlayer = players.getPreviousPlayer(currentPlayer);
         }
-        
+
         players.setCurrentPlayer(currentPlayer);
         updateTurnDisplay();
-        
+
         if (!gameOver && !isCurrentPlayerHuman()) {
             scheduleAITurn(1500);
         }
@@ -414,18 +421,18 @@ public class UNOMain {
     private void advanceTurn() {
         Player current = getCurrentPlayer();
         unoCalledMap.put(current, false);
-        
+
         Player nextPlayer;
         if (!isReversed) {
             nextPlayer = players.getNextPlayer(current);
         } else {
             nextPlayer = players.getPreviousPlayer(current);
         }
-        
+
         currentPlayer = nextPlayer;
         players.setCurrentPlayer(currentPlayer);
         updateTurnDisplay();
-        
+
         if (!gameOver && !isCurrentPlayerHuman()) {
             scheduleAITurn(1500);
         }
@@ -434,13 +441,13 @@ public class UNOMain {
         if (getCurrentPlayer().nbrCarteRestante() == 0) {
             gameOver = true;
             showGameMessage(getCurrentPlayer().getname() + " wins!", "Game Over");
-            
+
             int restart = ZOptionPane.showConfirmDialog(
                 window.getContentPane(),
                 "Play again?",
                 "Game Over",
                     ZOptionPane.YES_NO_OPTION);
-                
+
             if (restart == ZOptionPane.YES_OPTION) {
                 restartGame();
             }
@@ -478,7 +485,7 @@ public class UNOMain {
     private void chooseColor() {
         if (isChoosingColor) return;
         isChoosingColor = true;
-        
+
         try {
             if (isCurrentPlayerHuman()) {
                 String[] options = {"Red", "Blue", "Green", "Yellow"};
@@ -490,7 +497,7 @@ public class UNOMain {
                     null,
                     options,
                     options[0]);
-                    
+
                 currentCard.setColor(choice != null ? choice.toLowerCase() : "red");
             } else {
                 Bot bot = (Bot) getCurrentPlayer();
@@ -530,12 +537,12 @@ public class UNOMain {
         for (int i = 0; i < MAX_PLAYERS; i++) {
             Player player = getPlayerAt(i);
             PlayerHandPanel panel = playerPanels.get(i);
-            
+
             panel.clear();
             for (int j = 0; j < player.nbrCarteRestante(); j++) {
                 panel.addCard(player.getCardNum(j));
             }
-            
+
             panel.setActive(player.nbrCarteRestante() == 1 && unoCalledMap.get(player));
         }
     }
@@ -543,7 +550,7 @@ public class UNOMain {
     private void updateTurnDisplay() {
         turnLabel.setText(getCurrentPlayer().getname() + "'s turn");
         drawButton.setEnabled(isCurrentPlayerHuman() && !gameOver && !isChoosingColor);
-        
+
         for (int i = 0; i < MAX_PLAYERS; i++) {
             playerPanels.get(i).setActive(i == getCurrentPlayerIndex());
         }

@@ -42,7 +42,7 @@ public class Player {
         System.out.println("you have : ");
         for (Card carte : main) {
             System.out.print(i + " : "); // numero de la carte dans la main
-            carte.afficher();
+            carte.afficher();				// ici c pour afficher la carte
             System.out.println("");
             i++;
         }

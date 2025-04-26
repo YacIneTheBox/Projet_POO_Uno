@@ -1,11 +1,14 @@
+import Z.ZFrame;
+import Z.ZPanel;
+
 import javax.swing.*;
 import java.awt.*;
 
 public class GameWindow {
-    private final JFrame frame;
+    public final ZFrame frame;
 
     public GameWindow(String title) {
-        frame = new JFrame(title);
+        frame = new ZFrame(title);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
     }
@@ -20,7 +23,7 @@ public class GameWindow {
         frame.repaint();
     }
 
-    public void addPlayerPanel(JPanel panel, String position) {
+    public void addPlayerPanel(ZPanel panel, String position) {
         switch(position.toLowerCase()) {
             case "top" -> frame.add(panel, BorderLayout.NORTH);
             case "left" -> frame.add(panel, BorderLayout.WEST);
@@ -29,7 +32,7 @@ public class GameWindow {
         }
     }
 
-    public void setContent(JPanel panel) {
+    public void setContent(ZPanel panel) {
         frame.getContentPane().add(panel, BorderLayout.CENTER);
     }
 
