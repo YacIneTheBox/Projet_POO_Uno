@@ -1,22 +1,25 @@
-# Welcome to Projet Poo Uno!
+# UNO Game - Java Implementation
 
-Hi! This is a **Uno Game** made with Java by student from the university usthb  . we implement an ui using only the swing library , we redefine all the component of the swing library that we use .
+# UNO Card Game - Java Implementation
 
+![Java](https://img.shields.io/badge/Java-17%2B-blue)
+![Swing](https://img.shields.io/badge/GUI-Swing-orange)
 
-# Main Game
+A complete implementation of the classic UNO card game with both terminal and graphical interfaces.
 
-this is the base Uno game 
+## Features
 
-### Class of the main game
+- 🃏 Full UNO game rules implementation
+- 🖥️ Dual interface modes: Terminal and GUI
+- 🎨 Custom UI framework (ZPanel, ZLabel, ZCardButton)
+- 🔊 Sound effects with volume control
+- 🎮 Interactive card animations and hover effects
 
+## Installation
 
+1. Clone the repository:
 
-# Graphic Interface
-
-this is the redefined swing library that we use in the **Main Game**
-
-### Class of the Graphic Interface
-
+git clone https://github.com/yourusername/uno-game.git
 # participant
 
 |     Name           |Groupe                          |Matricule                         |
