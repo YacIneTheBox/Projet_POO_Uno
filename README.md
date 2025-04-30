@@ -1,11 +1,9 @@
-# UNO Game - Java Implementation
-
 # UNO Card Game - Java Implementation
 
 ![Java](https://img.shields.io/badge/Java-17%2B-blue)
 ![Swing](https://img.shields.io/badge/GUI-Swing-orange)
 
-A complete implementation of the classic UNO card game with both terminal and graphical interfaces.
+A complete implementation of the classic UNO card game with both terminal (execute the game.java) and graphical interfaces(execute the UNO.java).
 
 ## Features
 
@@ -15,11 +13,6 @@ A complete implementation of the classic UNO card game with both terminal and gr
 - 🔊 Sound effects with volume control
 - 🎮 Interactive card animations and hover effects
 
-## Installation
-
-1. Clone the repository:
-
-git clone https://github.com/yourusername/uno-game.git
 # participant
 
 |     Name           |Groupe                          |Matricule                         |
