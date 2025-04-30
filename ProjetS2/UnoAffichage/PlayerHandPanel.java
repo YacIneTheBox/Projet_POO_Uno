@@ -33,7 +33,7 @@ public class PlayerHandPanel {
 
 
 
-    
+
     private void setupMainPanel() {
         mainPanel = new ZPanel(new BorderLayout());
         mainPanel.personalizePanel(new Color(92, 89, 89),0,Color.black);
@@ -50,10 +50,10 @@ public class PlayerHandPanel {
     public void addCard(Card card) {
         GameCard gameCard = new GameCard(card);
         cards.add(gameCard);
-        
+
         ZCardButton cardButton = createCardButton(gameCard);
         cardsPanel.add(cardButton);
-        
+
         updateCardLayout();
     }
 
@@ -70,7 +70,7 @@ public class PlayerHandPanel {
                     button.setIcon(gameCard.getCardImage());
                 }
             }
-            
+
             @Override
             public void mouseExited(MouseEvent e) {
                 button.setBorder(null);
@@ -79,7 +79,7 @@ public class PlayerHandPanel {
                 }
             }
         });
-        
+
         button.addActionListener(e -> {
             if (isActive && cardClickHandler != null && isHumanPlayer) {
                 cardClickHandler.accept(gameCard);
@@ -110,7 +110,7 @@ public class PlayerHandPanel {
     public void setActive(boolean active) {
         isActive = active;
         if (active) {
-            mainPanel.setBorder(BorderFactory.createLineBorder(Color.RED, 1));
+            mainPanel.setBorder(BorderFactory.createLineBorder(Color.RED, 3));
         } else {
             mainPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 0));
         }
@@ -130,15 +130,15 @@ public class PlayerHandPanel {
     public void setHumanPlayer(boolean isHuman) {
         this.isHumanPlayer = isHuman;
     }
-    
+
     public void setCardClickHandler(Consumer<GameCard> handler) {
         this.cardClickHandler = handler;
     }
-    
+
     public ZPanel getPanel() {
         return mainPanel;
     }
-    
+
     public List<GameCard> getCards() {
         return new ArrayList<>(cards);
     }

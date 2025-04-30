@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
-
 public class UNOMain {
     // Game state variables
     private Deck deck;
@@ -39,7 +38,7 @@ public class UNOMain {
 
     public UNOMain() {
         soundManager = new SoundManager();
-        soundManager.setMasterVolume(0.6f); // Volume global à 70%
+        soundManager.setMasterVolume(0.6f); // Volume global Ã  70%
 
         // Configuration des effets sonores avec volumes individuels
         soundManager.loadSoundEffect("bgMusic", 0.15f);
@@ -48,7 +47,6 @@ public class UNOMain {
         soundManager.loadSoundEffect("marioLose",  0.5f);
         soundManager.loadSoundEffect("marioWin",  0.5f);
         soundManager.loadSoundEffect("Draw",  0.5f);
-
 
         soundManager.playSoundEffect("bgMusic");
 
@@ -81,6 +79,10 @@ public class UNOMain {
         // Add bots
         for (int i = 1; i <= numBots; i++) {
             Bot bot = new Bot("Bot" + i);
+            WildCard fourcolor = new FourColorCard();
+            fourcolor.setEffect("4color");
+            fourcolor.setEffect("4color");
+
             for (int j = 0; j < 7; j++) {
                 Card card = deck.Drawcard();
                 if(deck.deckisempty()){
@@ -110,8 +112,8 @@ public class UNOMain {
     private int getNumberOfHumanPlayers() {
         Integer[] options = {1, 2, 3, 4};
 
-        ZOptionPane.setCustomColors(new Color(96, 107, 101),
-                new Color(94, 118, 104), Color.WHITE,
+        ZOptionPane.setCustomColors(new Color(92, 89, 89),
+                new Color(92, 89, 89), Color.WHITE,
                 new Color(201, 237, 221), Color.WHITE, Color.DARK_GRAY);
 
         Integer selection = (Integer) ZOptionPane.showInputDialog(
@@ -140,6 +142,9 @@ public class UNOMain {
         setupCenterPanel();
         window.setSize(1000, 700);
         window.setVisible(true);
+
+        // Set initial color based on first card
+        updateUIComponentsColor(currentCard);
         updateGameState();
 
         // Add this line to set up click handlers
@@ -160,7 +165,6 @@ public class UNOMain {
         }
     }
 
-    //ici c le panel du centre qui contient le turn label en haut les deux dicard(droite) et deck(gauche) et les boutton
     private void setupCenterPanel() {
         ZPanel center = new ZPanel(new BorderLayout()); // affichage de Player
         center.personalizePanel(new Color(92, 89, 89),0,Color.BLACK);
@@ -169,10 +173,8 @@ public class UNOMain {
         turnLabel.personalizeLabel(new Color(92, 89, 89),new Font("Arial", Font.BOLD, 24));
         turnLabel.setForeground(Color.white);
 
-
         // Ensure the label itself is centered
         turnLabel.setHorizontalAlignment(SwingConstants.CENTER);
-
         center.add(turnLabel, BorderLayout.NORTH);
 
         center.add(piles.getPanel(), BorderLayout.CENTER);
@@ -182,7 +184,6 @@ public class UNOMain {
         window.setContent(center);
     }
 
-    //f had la methode je vais pouvoire modifier le panel des deux boutton.
     private ZPanel createButtonPanel() {
         ZPanel buttonPanel = new ZPanel(new FlowLayout());
         buttonPanel.personalizePanel(new Color(92, 89, 89),0,Color.BLACK);
@@ -203,7 +204,6 @@ public class UNOMain {
             final int playerIndex = i;
             playerPanels.get(i).setCardClickHandler(card -> {
                 if (getCurrentPlayerIndex() == playerIndex && !gameOver && !isChoosingColor) {
-                    // Add debug output to verify clicks are being received
                     System.out.println("Card clicked: " + card.getOriginalCard());
                     handleHumanPlay(card);
                 } else {
@@ -212,7 +212,7 @@ public class UNOMain {
             });
         }
     }
-    /* ========== CARD PLAY HANDLING ========== */
+
     private void handleHumanPlay(GameCard card) {
         Player currentPlayer = getCurrentPlayer();
         System.out.println("Attempting to play: " + card.getOriginalCard() + " on " + currentCard);
@@ -224,6 +224,9 @@ public class UNOMain {
                 Card playedCard = currentPlayer.poserCarte(cardIndex);
                 currentCard = playedCard;
                 deck.addtogamepile(currentCard);
+
+                // Update UI colors based on played card
+                updateUIComponentsColor(playedCard);
 
                 if (currentPlayer.nbrCarteRestante() == 1 && !unoCalledMap.get(currentPlayer)) {
                     drawPenaltyCards(currentPlayer, 2,false);
@@ -264,7 +267,6 @@ public class UNOMain {
             System.out.println("Invalid play - card cannot be played on current card");
             showGameMessage("Invalid card selection!", "Error");
         }
-
     }
 
     private void updateCurrentPlayerHand() {
@@ -280,6 +282,7 @@ public class UNOMain {
         // Update the active status for the current player
         currentPanel.setActive(true);
     }
+
     private void handleDrawCard() {
         soundManager.playSoundEffect("Draw");
         if (gameOver || isChoosingColor || !isCurrentPlayerHuman()) return;
@@ -305,9 +308,9 @@ public class UNOMain {
                     if (cardIndex != -1) {
                         currentCard = currentPlayer.poserCarte(cardIndex);
                         deck.addtogamepile(currentCard);
+                        updateUIComponentsColor(currentCard);
                         handleSpecialCard(drawnCard);
 
-                        // Use SwingUtilities.invokeLater to update UI components
                         SwingUtilities.invokeLater(() -> {
                             updateCurrentPlayerHand();
                             updateDiscardPile();
@@ -315,12 +318,11 @@ public class UNOMain {
                                 advanceTurn();
                             }
                         });
-                        return; // Exit after playing the card
+                        return;
                     }
                 }
             }
 
-            // If the card isn't played, just update the current player's hand
             SwingUtilities.invokeLater(() -> {
                 updateCurrentPlayerHand();
                 if (!isChoosingColor) {
@@ -333,14 +335,12 @@ public class UNOMain {
         }
     }
 
-    /* ========== UNO MECHANICS ========== */
     private void handleUnoCall() {
         if (!isCurrentPlayerHuman()) return;
 
         Player currentPlayer = getCurrentPlayer();
         boolean isValidCall = currentPlayer.nbrCarteRestante() == 2;
 
-        // Determine the message to show
         String message;
         String title;
         if (isValidCall) {
@@ -355,17 +355,13 @@ public class UNOMain {
             title = "UNO Penalty";
         }
 
-        // Show the message and update the UI on the EDT
         SwingUtilities.invokeLater(() -> {
             showGameMessage(message, title);
             updateCurrentPlayerHand();
-            // Update the turn display if needed
             updateTurnDisplay();
         });
     }
 
-
-    /* ========== AI TURN HANDLING ========== */
     private void scheduleAITurn(int delay) {
         if (gameTimer != null) gameTimer.stop();
 
@@ -381,7 +377,7 @@ public class UNOMain {
     private void aiPlay() {
         Bot currentBot = (Bot) getCurrentPlayer();
         soundManager.playSoundEffect("playSound");
-        // Check
+
         if (currentBot.nbrCarteRestante() == 2 && currentBot.canplay(currentCard)) {
             soundManager.playSoundEffect("marioWin");
             unoCalledMap.put(currentBot, true);
@@ -393,14 +389,8 @@ public class UNOMain {
             Card playedCard = currentBot.getCardNum(cardIndex);
             currentCard = currentBot.poserCarte(cardIndex);
             deck.addtogamepile(currentCard);
+            updateUIComponentsColor(currentCard);
 
-            // no need to ckeck since its a bot
-            /*if (currentBot.nbrCarteRestante() == 1 && !unoCalledMap.get(currentBot)) {
-                drawPenaltyCards(currentBot, 2);
-                showGameMessage(currentBot.getname() + " didn't call UNO! +2 cards", "PENALTY");
-            }*/
-
-            showGameMessage(currentBot.getname() + " plays " + playedCard, "AI Turn");
             updateDiscardPile();
             updatePlayerHands();
             handleSpecialCard(playedCard);
@@ -422,13 +412,13 @@ public class UNOMain {
         }
         if (drawnCard != null) {
             bot.receiveCard(drawnCard);
-            showGameMessage(bot.getname() + " draws a card", "AI Turn");
 
-            if (drawnCard.canPlay(currentCard) ) {
+            if (drawnCard.canPlay(currentCard)) {
                 int newCardIndex = findCardIndex(bot, drawnCard);
                 if (newCardIndex != -1) {
                     currentCard = bot.poserCarte(newCardIndex);
                     deck.addtogamepile(currentCard);
+                    updateUIComponentsColor(currentCard);
                     showGameMessage(bot.getname() + " plays drawn card", "AI Turn");
                     updateTopCard();
                     handleSpecialCard(drawnCard);
@@ -438,9 +428,7 @@ public class UNOMain {
         updatePlayerHands();
     }
 
-    /* ========== SPECIAL CARD EFFECTS ========== */
     private void handleSpecialCard(Card card) {
-
         if (card instanceof WildCard) {
             chooseColor();
             if (card instanceof Plus4Card) {
@@ -455,12 +443,9 @@ public class UNOMain {
         }
     }
 
-
     private void handleSkipEffect() {
         Player playerToSkip = nextplayer();
-        showGameMessage(playerToSkip.getname() + "'s turn is skipped!", "Skip Card");
 
-        // Move to the player after the skipped one
         if (!isReversed) {
             currentPlayer = players.getNextPlayer(currentPlayer);
         } else {
@@ -474,6 +459,7 @@ public class UNOMain {
             scheduleAITurn(800);
         }
     }
+
     private void handleReverseEffect() {
         isReversed = !isReversed;
         showGameMessage("Direction reversed!", "Reverse Card");
@@ -483,17 +469,13 @@ public class UNOMain {
     private void handlePlus4Effect() {
         Player nextPlayer = nextplayer();
         drawPenaltyCards(nextPlayer, 4,true);
-        showGameMessage(nextPlayer.getname() + " draws 4 cards!", "Plus 4");
-        // Don't advance turn here - let advanceTurn() handle it
-    }
+       }
 
     private void handlePlus2Effect() {
         Player nextPlayer = nextplayer();
         drawPenaltyCards(nextPlayer, 2,true);
-        showGameMessage(nextPlayer.getname() + " draws 2 cards!", "Plus 2");
-        // Don't advance turn here - let advanceTurn() handle it
-    }
-    /* ========== GAME STATE MANAGEMENT ========== */
+       }
+
     private void advanceTurn() {
         Player current = getCurrentPlayer();
         unoCalledMap.put(current, false);
@@ -513,6 +495,7 @@ public class UNOMain {
             scheduleAITurn(800);
         }
     }
+
     private boolean checkWinCondition() {
         if (getCurrentPlayer().nbrCarteRestante() == 0) {
             soundManager.playSoundEffect("Win");
@@ -527,10 +510,9 @@ public class UNOMain {
 
             if (restart == ZOptionPane.YES_OPTION) {
                 restartGame();
-            }else {
+            } else {
                 window.close();
             }
-
 
             return true;
         }
@@ -542,9 +524,8 @@ public class UNOMain {
             gameTimer.stop();
         }
 
-        // Clear static fields
         playerPanels.clear();
-        window.close();  // already done
+        window.close();
         window = null;
         piles = null;
         turnLabel = null;
@@ -557,8 +538,6 @@ public class UNOMain {
         });
     }
 
-
-    /* ========== UTILITY METHODS ========== */
     private int findCardIndex(Player player, Card targetCard) {
         for (int i = 0; i < player.nbrCarteRestante(); i++) {
             if (player.getCardNum(i).equals(targetCard)) {
@@ -568,7 +547,7 @@ public class UNOMain {
         return -1;
     }
 
-    private void drawPenaltyCards(Player player, int count,boolean forspeacialcard) {
+    private void drawPenaltyCards(Player player, int count, boolean forspeacialcard) {
         for (int i = 0; i < count; i++) {
             Card drawn = deck.Drawcard();
             if(deck.deckisempty()){
@@ -585,42 +564,120 @@ public class UNOMain {
 
         try {
             if (isCurrentPlayerHuman()) {
-                String[] options = {"Red", "Blue", "Green", "Yellow"};
-                String choice = (String) ZOptionPane.showInputDialog(
-                        window.getContentPane(),
-                        "Choose color:",
-                        "Wild Card",
-                        ZOptionPane.PLAIN_MESSAGE,
-                        null,
-                        options,
-                        options[0]);
+                ZPanel colorPanel = new ZPanel(new GridLayout(2, 2, 10, 10));
+                colorPanel.setBackground(new Color(92, 89, 89));
 
-                currentCard.setColor(choice != null ? choice.toLowerCase() : "red");
+                Color[] colors = {
+                        new Color(198, 18, 1),    // Red
+                        new Color(12, 148, 0),     // Green
+                        new Color(0, 102, 227),    // Blue
+                        new Color(227, 182, 0)    // Yellow
+                };
+
+                String[] colorNames = { "red", "green", "blue", "yellow" };
+
+                for (int i = 0; i < colors.length; i++) {
+                    JButton colorButton = new JButton();
+                    colorButton.setBackground(colors[i]);
+                    colorButton.setOpaque(true);
+                    colorButton.setBorderPainted(false);
+                    colorButton.setPreferredSize(new Dimension(80, 80));
+
+                    int finalI = i;
+                    colorButton.addActionListener(e -> {
+                        currentCard.setColor(colorNames[finalI]);
+                        updateUIComponentsColor(currentCard);
+                        isChoosingColor = false;
+                        ((JComponent)e.getSource()).getTopLevelAncestor().setVisible(false);
+                    });
+                    colorPanel.add(colorButton);
+                }
+
+                ZDialog dialog = new ZDialog();
+                dialog.setTitle("Choose a color");
+                dialog.setContentPane(colorPanel);
+                dialog.pack();
+                dialog.setLocationRelativeTo(window.getContentPane());
+                dialog.setVisible(true);
             } else {
                 Bot bot = (Bot) getCurrentPlayer();
-                String bestColor = determineMostCommonColor(bot);
-                currentCard.setColor(bestColor);
-                showGameMessage(bot.getname() + " chooses " + bestColor, "Wild Card");
-            }
-            updateTopCard();
+                String chosenColor = determineMostCommonColor(bot);
+
+                // Ensure valid color selection
+                if (!chosenColor.equals("red") && !chosenColor.equals("blue") &&
+                        !chosenColor.equals("green") && !chosenColor.equals("yellow")) {
+                    chosenColor = "red"; // Fallback to red
+                }
+
+                currentCard.setColor(chosenColor);
+                updateUIComponentsColor(currentCard);
+               }
         } finally {
             isChoosingColor = false;
+            updateTopCard();
         }
     }
 
     private String determineMostCommonColor(Bot bot) {
         Map<String, Integer> colorCounts = new HashMap<>();
+        colorCounts.put("red", 0);
+        colorCounts.put("blue", 0);
+        colorCounts.put("green", 0);
+        colorCounts.put("yellow", 0);
+
+        // Only count valid UNO colors
         for (int i = 0; i < bot.nbrCarteRestante(); i++) {
             String color = bot.getCardNum(i).getColor();
-            colorCounts.put(color, colorCounts.getOrDefault(color, 0) + 1);
+            if (colorCounts.containsKey(color)) {
+                colorCounts.put(color, colorCounts.get(color) + 1);
+            }
         }
-        return colorCounts.entrySet().stream()
-                .max(Map.Entry.comparingByValue())
-                .map(Map.Entry::getKey)
-                .orElse("red");
+
+        // Find max count with valid colors
+        int maxCount = -1;
+        String bestColor = "red";
+        for (Map.Entry<String, Integer> entry : colorCounts.entrySet()) {
+            if (entry.getValue() > maxCount) {
+                maxCount = entry.getValue();
+                bestColor = entry.getKey();
+            }
+        }
+
+        return bestColor;
     }
 
-    /* ========== UI UPDATE METHODS ========== */
+    private void updateUIComponentsColor(Card card) {
+        Color cardColor = getColorFromCard(card);
+
+        SwingUtilities.invokeLater(() -> {
+            turnLabel.setBackground(cardColor);
+            turnLabel.setOpaque(true);
+            turnLabel.setForeground(Color.WHITE);
+
+            drawButton.setBackground(cardColor);
+            unoButton.setBackground(cardColor);
+
+            drawButton.setForeground(Color.WHITE);
+            unoButton.setForeground(Color.WHITE);
+
+            drawButton.repaint();
+            unoButton.repaint();
+            turnLabel.repaint();
+        });
+    }
+
+    private Color getColorFromCard(Card card) {
+        if (card == null) return new Color(92, 89, 89); // Default background color
+
+        switch (card.getColor()) {
+            case "red": return new Color(198, 18, 1);
+            case "blue": return new Color(0, 102, 227);
+            case "green": return new Color(12, 148, 0);
+            case "yellow": return new Color(227, 182, 0);
+            default: return new Color(92, 89, 89); // Default background color
+        }
+    }
+
     private void updateTopCard() {
         piles.updateTopCard(new GameCard(currentCard));
     }
@@ -653,7 +710,6 @@ public class UNOMain {
         }
     }
 
-    /* ========== PLAYER MANAGEMENT ========== */
     private int getCurrentPlayerIndex() {
         Player current = players.getFirstPlayer();
         for (int i = 0; i < MAX_PLAYERS; i++) {

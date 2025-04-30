@@ -155,11 +155,7 @@ public class GameCard {
         return image;
     }
 
-    public ZCardButton getCardButton() {
-        ZCardButton btn = new ZCardButton(getCardImage());
 
-        return btn;
-    }
 
 
     public ZLabel getCardLabel() {
