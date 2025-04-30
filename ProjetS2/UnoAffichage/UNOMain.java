@@ -79,10 +79,6 @@ public class UNOMain {
         // Add bots
         for (int i = 1; i <= numBots; i++) {
             Bot bot = new Bot("Bot" + i);
-            WildCard fourcolor = new FourColorCard();
-            fourcolor.setEffect("4color");
-            fourcolor.setEffect("4color");
-
             for (int j = 0; j < 7; j++) {
                 Card card = deck.Drawcard();
                 if(deck.deckisempty()){
