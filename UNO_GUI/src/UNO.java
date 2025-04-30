@@ -41,7 +41,7 @@ public class UNO {
         soundManager.setMasterVolume(0.6f); // Volume global Ã  70%
 
         // Configuration des effets sonores avec volumes individuels
-        soundManager.loadSoundEffect("bgMusic", 0.15f);
+        soundManager.loadSoundEffect("bgMusic", 0.2f);
         soundManager.loadSoundEffect("playSound",  0.8f);
         soundManager.loadSoundEffect("wrongCard",  0.5f);
         soundManager.loadSoundEffect("marioLose",  0.5f);
