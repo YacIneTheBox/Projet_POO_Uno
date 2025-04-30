@@ -92,9 +92,9 @@ public class ZCardButton extends JButton {
 
 
 		// Dégradé glossy
-		GradientPaint gp = new GradientPaint(0, 0, getBackground().brighter(), 0, h, getBackground().darker());
-		g2.setPaint(gp);
-		g2.fillRoundRect(0, 0, w - 4, h - 2, arc, arc);
+		//GradientPaint gp = new GradientPaint(0, 0, getBackground().brighter(), 0, h, getBackground().darker());
+		//g2.setPaint(gp);
+		//g2.fillRoundRect(0, 0, w - 4, h - 2, arc, arc);
 
 		// Reflet
 		g2.setColor(new Color(92, 89, 89, 0));
